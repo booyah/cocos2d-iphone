@@ -303,6 +303,15 @@ enum {
  */
 -(CCNode*) getChildByTag:(int) tag;
 
+/** Gets a child from the container or any of the container's children, given its tag
+ * If traverse is YES, performs a breadth-first search through
+ * the node heirarchy and returns the first matching node.
+ * If traverse is NO, calls getChildByTag:
+ @return returns a CCNode object
+ @since v0.99.5
+ */
+-(CCNode*) getChildByTag:(int)aTag traverse:(BOOL)traverse;
+
 /** Reorders a child according to a new z value.
  * The child MUST be already added.
  */

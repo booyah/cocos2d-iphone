@@ -294,6 +294,50 @@
 	return nil;
 }
 
+-(CCNode*) getChildByTag:(int)aTag traverse:(BOOL)traverse
+{
+	NSAssert( aTag != kCCNodeTagInvalid, @"Invalid tag");
+	
+	if ( !traverse )
+	{
+		return [self getChildByTag:aTag];
+	}
+	
+	if ( children_.count == 0 ) return nil;
+
+	CCNode *taggedNode = nil;
+
+	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+	NSMutableArray *queue = [NSMutableArray arrayWithObject:self];
+	NSMutableSet *visited = [NSMutableSet setWithObject:self];
+	
+	while ( [queue count] > 0 )
+	{
+		CCNode *currentNode = [[queue objectAtIndex:0] retain];
+		CCArray *children = currentNode.children;
+		CCNode *childNode = nil;
+		CCARRAY_FOREACH(children, childNode)
+		{
+			if ( childNode.tag == aTag )
+			{
+				taggedNode = [childNode retain];
+				break;
+			}
+			if ( ![visited containsObject:childNode] )
+			{
+				[visited addObject:childNode];
+				[queue addObject:childNode];
+			}
+		}
+		[queue removeObjectAtIndex:0];
+		[currentNode release];
+	}
+	
+	[pool drain];
+	
+	return [taggedNode autorelease];
+}
+
 /* "add" logic MUST only be on this method
  * If a class want's to extend the 'addChild' behaviour it only needs
  * to override this method
