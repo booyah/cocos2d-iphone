@@ -184,7 +184,7 @@
 
  @since v0.99.2
  */
-#define CC_TEXTURE_NPOT_SUPPORT 0
+#define CC_TEXTURE_NPOT_SUPPORT 1
 
 /** @def CC_SPRITE_DEBUG_DRAW
  If enabled, all subclasses of CCSprite will draw a bounding box
