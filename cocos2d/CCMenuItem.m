@@ -50,6 +50,7 @@ enum {
 @implementation CCMenuItem
 
 @synthesize isSelected=isSelected_;
+@synthesize isSwitch=isSwitch_;
 -(id) init
 {
 	NSException* myException = [NSException

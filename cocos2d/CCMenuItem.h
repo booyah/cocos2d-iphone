@@ -48,12 +48,18 @@
 	
 	BOOL isEnabled_;
 	BOOL isSelected_;
+	
+	// BRC: used for Booyah MVP app
+	// to determine whether selection state should be maintained
+	// default = NO ==> standard cocos2d bahvaior
+	BOOL isSwitch_;
 }
 
 /** returns whether or not the item is selected
 @since v0.8.2
 */
 @property (nonatomic,readonly) BOOL isSelected;
+@property (nonatomic) BOOL isSwitch;
 
 /** Creates a CCMenuItem with a target/selector */
 +(id) itemWithTarget:(id)target selector:(SEL)selector;
