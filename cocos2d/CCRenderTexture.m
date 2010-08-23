@@ -90,8 +90,10 @@
 -(void)begin
 {
 	CC_DISABLE_DEFAULT_GL_STATES();
-	// Save the current matrix
-	glPushMatrix();
+	
+//	GLint matrixMode;
+//	glGetIntegerv(GL_MATRIX_MODE, &matrixMode);
+//	CCLOG(@"matrix mode = %d", matrixMode);
 	
 	CGSize texSize = [texture_ contentSize];
 
@@ -101,10 +103,19 @@
 	float heightRatio = size.height / texSize.height;
 
 	// Adjust the orthographic propjection and viewport
-	ccglOrtho((float)-1.0 / widthRatio,  (float)1.0 / widthRatio, (float)-1.0 / heightRatio, (float)1.0 / heightRatio, -1,1);
+	// Save the current matrix
+	glMatrixMode(GL_MODELVIEW); glPushMatrix();
 	glViewport(0, 0, texSize.width, texSize.height);
+	
+	glMatrixMode(GL_PROJECTION); glPushMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	
+	ccglOrtho((float)-1.0 / widthRatio,  (float)1.0 / widthRatio, (float)-1.0 / heightRatio, (float)1.0 / heightRatio, -1,1);
 
-	glGetIntegerv(CC_GL_FRAMEBUFFER_BINDING, &oldFBO_);
+	glMatrixMode(GL_TEXTURE); glPushMatrix();
+	
+	glMatrixMode(GL_MODELVIEW);
+	glGetIntegerv(GL_FRAMEBUFFER_BINDING_OES, &oldFBO_);
 	ccglBindFramebuffer(CC_GL_FRAMEBUFFER, fbo_);//Will direct drawing to the frame buffer created above
 	
 	CC_ENABLE_DEFAULT_GL_STATES();	
@@ -113,12 +124,21 @@
 -(void)end
 {
 	ccglBindFramebuffer(CC_GL_FRAMEBUFFER, oldFBO_);
-	// Restore the original matrix and viewport
-	glPopMatrix();
 	CGSize size = [[CCDirector sharedDirector] displaySize];
 	glViewport(0, 0, size.width, size.height);
 
-	glColorMask(TRUE, TRUE, TRUE, TRUE);
+	// BRC TODO: something seems wrong here...
+	// Why do I need the calls to glLoadIdentity & reset ortho
+	// shouldn't popMatrix handle this...?
+	glMatrixMode(GL_TEXTURE); glPopMatrix();
+	glMatrixMode(GL_PROJECTION); glPopMatrix();
+	glLoadIdentity();
+	ccglOrtho(0, size.width, 0, size.height, -1024, 1024);
+	glMatrixMode(GL_MODELVIEW); glPopMatrix();
+	glLoadIdentity();
+	glMatrixMode(GL_MODELVIEW);
+	
+	glColorMask(TRUE, TRUE, TRUE, TRUE);	
 }
 
 
@@ -169,8 +189,8 @@
 	int bytesPerRow					= bytesPerPixel * tx;
 	NSInteger myDataLength			= bytesPerRow * ty;
   
-	NSMutableData *buffer	= [[NSMutableData alloc] initWithCapacity:myDataLength];
-	NSMutableData *pixels	= [[NSMutableData alloc] initWithCapacity:myDataLength];
+	NSMutableData *buffer	= [[NSMutableData alloc] initWithLength:myDataLength];
+	NSMutableData *pixels	= [[NSMutableData alloc] initWithLength:myDataLength];
 
 	if( ! (buffer && pixels) ) {
 		CCLOG(@"cocos2d: CCRenderTexture#getUIImageFromBuffer: not enough memory");
