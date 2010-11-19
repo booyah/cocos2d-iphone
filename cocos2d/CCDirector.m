@@ -25,7 +25,7 @@
 
 /* Idea of decoupling Window from Director taken from OC3D project: http://code.google.com/p/oc3d/
  */
- 
+
 #import <unistd.h>
 #import <Availability.h>
 
@@ -34,6 +34,7 @@
 #import "CCScheduler.h"
 #import "CCActionManager.h"
 #import "CCTextureCache.h"
+#import "CCAnimationCache.h"
 #import "CCLabelAtlas.h"
 #import "ccMacros.h"
 #import "CCTransition.h"
@@ -58,9 +59,7 @@
 #define CC_DIRECTOR_DEFAULT CCDirectorDisplayLink
 #endif
 
-#if CC_ENABLE_PROFILERS
 #import "Support/CCProfiling.h"
-#endif
 
 #define kDefaultFPS		60.0	// 60 frames per second
 
@@ -73,11 +72,6 @@ extern NSString * cocos2dVersion(void);
 -(void) showFPS;
 // calculates delta time since last time it was called
 -(void) calculateDeltaTime;
-
-#if CC_ENABLE_PROFILERS
-- (void) showProfilers;
-#endif
-
 @end
 
 @implementation CCDirector
@@ -89,6 +83,8 @@ extern NSString * cocos2dVersion(void);
 @synthesize isPaused=isPaused_;
 @synthesize sendCleanupToScene=sendCleanupToScene_;
 @synthesize runningThread=runningThread_;
+@synthesize notificationNode=notificationNode_;
+@synthesize projectionDelegate=projectionDelegate_;
 //
 // singleton stuff
 //
@@ -128,12 +124,17 @@ static CCDirector *_sharedDirector = nil;
 		runningScene_ = nil;
 		nextScene_ = nil;
 		
+		notificationNode_ = nil;
+		
 		oldAnimationInterval_ = animationInterval_ = 1.0 / kDefaultFPS;
 		scenesStack_ = [[NSMutableArray alloc] initWithCapacity:10];
 		
 		// Set default projection (3D)
 		projection_ = kCCDirectorProjectionDefault;
-		
+
+		// projection delegate if "Custom" projection is used
+		projectionDelegate_ = nil;
+
 		// FPS
 		displayFPS_ = NO;
 		frames_ = 0;
@@ -144,7 +145,7 @@ static CCDirector *_sharedDirector = nil;
 		// running thread
 		runningThread_ = nil;
 		
-		screenSize_ = surfaceSize_ = CGSizeZero;
+		winSizeInPixels_ = winSizeInPoints_ = CGSizeZero;
 	}
 
 	return self;
@@ -158,7 +159,10 @@ static CCDirector *_sharedDirector = nil;
 	[FPSLabel_ release];
 #endif
 	[runningScene_ release];
+	[notificationNode_ release];
 	[scenesStack_ release];
+	
+	[projectionDelegate_ release];
 	
 	_sharedDirector = nil;
 	
@@ -234,20 +238,24 @@ static CCDirector *_sharedDirector = nil;
 
 -(float) getZEye
 {
-	return ( surfaceSize_.height / 1.1566f );
+	return ( winSizeInPixels_.height / 1.1566f );
 }
 
 -(void) setProjection:(ccDirectorProjection)projection
 {
-	CGSize size = surfaceSize_;
+	CGSize size = winSizeInPixels_;
+	
+	// XXX: quick & dirty hack to obtain the content scale factor
+	int scale = winSizeInPixels_.height / winSizeInPoints_.height;
+	
 	switch (projection) {
 		case kCCDirectorProjection2D:
 			glViewport(0, 0, size.width, size.height);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			ccglOrtho(0, size.width, 0, size.height, -1024, 1024);
+			ccglOrtho(0, size.width, 0, size.height, -1024 * scale, 1024 * scale);
 			glMatrixMode(GL_MODELVIEW);
-			glLoadIdentity();			
+			glLoadIdentity();
 			break;
 
 		case kCCDirectorProjection3D:
@@ -264,7 +272,8 @@ static CCDirector *_sharedDirector = nil;
 			break;
 			
 		case kCCDirectorProjectionCustom:
-			// if custom, ignore it. The user is resposible for setting the correct projection
+			if( projectionDelegate_ )
+				[projectionDelegate_ updateProjection];
 			break;
 			
 		default:
@@ -312,7 +321,7 @@ static CCDirector *_sharedDirector = nil;
 		openGLView_ = [view retain];
 		
 		// set size
-		surfaceSize_ = screenSize_ = CCNSSizeToCGSize( [view bounds].size );
+		winSizeInPixels_ = winSizeInPoints_ = CCNSSizeToCGSize( [view bounds].size );
 
 		[self setGLDefaultValues];
 	}
@@ -332,21 +341,24 @@ static CCDirector *_sharedDirector = nil;
 	return CGPointZero;
 }
 
-// get the current size of the glview
 -(CGSize)winSize
 {
-	return surfaceSize_;
+	return winSizeInPoints_;
 }
 
-// return  the current frame size
--(CGSize)displaySize
+-(CGSize)winSizeInPixels
 {
-	return surfaceSize_;
+	return winSizeInPixels_;
+}
+
+-(CGSize)displaySizeInPixels
+{
+	return winSizeInPixels_;
 }
 
 -(void) reshapeProjection:(CGSize)newWindowSize
 {
-	surfaceSize_ = screenSize_ = newWindowSize;
+	winSizeInPixels_ = winSizeInPoints_ = newWindowSize;
 	[self setProjection:projection_];
 }
 
@@ -416,10 +428,14 @@ static CCDirector *_sharedDirector = nil;
 	FPSLabel_ = nil;
 #endif	
 
+	[projectionDelegate_ release];
+	projectionDelegate_ = nil;
+	
 	// Purge bitmap cache
 	[CCLabelBMFont purgeCachedData];
 
 	// Purge all managers
+	[CCAnimationCache purgeSharedAnimationCache];
 	[CCSpriteFrameCache purgeSharedSpriteFrameCache];
 	[CCScheduler purgeSharedScheduler];
 	[CCActionManager purgeSharedManager];
@@ -564,15 +580,15 @@ static CCDirector *_sharedDirector = nil;
 }
 #endif
 
-#if CC_ENABLE_PROFILERS
 - (void) showProfilers {
+#if CC_ENABLE_PROFILERS
 	accumDtForProfiler_ += dt;
 	if (accumDtForProfiler_ > 1.0f) {
 		accumDtForProfiler_ = 0;
 		[[CCProfiler sharedProfiler] displayTimers];
 	}
+#endif // CC_ENABLE_PROFILERS
 }
-#endif
 
 @end
 

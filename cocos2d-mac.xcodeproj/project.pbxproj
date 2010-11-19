@@ -35,6 +35,10 @@
 		E01E6A3E121EDCD3001A484F /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E01E6A3D121EDCD3001A484F /* ApplicationServices.framework */; };
 		E01E6B36121EDCED001A484F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E036A79E121B5C870037C5C6 /* QuartzCore.framework */; };
 		E01E6B49121EDCF4001A484F /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E036A79C121B5C720037C5C6 /* OpenGL.framework */; };
+		E02BBC7D126CD870006E46A2 /* CCAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = E02BBC79126CD870006E46A2 /* CCAnimation.m */; };
+		E02BBC7E126CD870006E46A2 /* CCAnimation.h in Headers */ = {isa = PBXBuildFile; fileRef = E02BBC7A126CD870006E46A2 /* CCAnimation.h */; };
+		E02BBC7F126CD870006E46A2 /* CCAnimationCache.m in Sources */ = {isa = PBXBuildFile; fileRef = E02BBC7B126CD870006E46A2 /* CCAnimationCache.m */; };
+		E02BBC80126CD870006E46A2 /* CCAnimationCache.h in Headers */ = {isa = PBXBuildFile; fileRef = E02BBC7C126CD870006E46A2 /* CCAnimationCache.h */; };
 		E05052B2122D5655005B74CB /* fps_images.png in Resources */ = {isa = PBXBuildFile; fileRef = E076E7B11225EDD000DE0DA2 /* fps_images.png */; };
 		E0505323122D5AE6005B74CB /* 320x480-Splash-angry-01.png in Resources */ = {isa = PBXBuildFile; fileRef = E076E78F1225EDD000DE0DA2 /* 320x480-Splash-angry-01.png */; };
 		E0505324122D5AE6005B74CB /* 320x480-Splash-angry-02.png in Resources */ = {isa = PBXBuildFile; fileRef = E076E7901225EDD000DE0DA2 /* 320x480-Splash-angry-02.png */; };
@@ -2805,6 +2809,15 @@
 		E0B930021226C0DD003FF67E /* ApplicationServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E01E6A3D121EDCD3001A484F /* ApplicationServices.framework */; };
 		E0B930031226C0DD003FF67E /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = E0F9256D1224207200EF2362 /* libz.dylib */; };
 		E0B930101226C184003FF67E /* EaseActionsTest.m in Sources */ = {isa = PBXBuildFile; fileRef = E0B9300F1226C184003FF67E /* EaseActionsTest.m */; };
+		E0C6067D128ECC110099367C /* konqa32-hd.fnt in Resources */ = {isa = PBXBuildFile; fileRef = E0C60677128ECC110099367C /* konqa32-hd.fnt */; };
+		E0C6067E128ECC110099367C /* konqa32-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E0C60678128ECC110099367C /* konqa32-hd.png */; };
+		E0C6067F128ECC110099367C /* konqa32.fnt in Resources */ = {isa = PBXBuildFile; fileRef = E0C60679128ECC110099367C /* konqa32.fnt */; };
+		E0C60680128ECC110099367C /* konqa32.png in Resources */ = {isa = PBXBuildFile; fileRef = E0C6067A128ECC110099367C /* konqa32.png */; };
+		E0C60681128ECC110099367C /* larabie-16-hd.png in Resources */ = {isa = PBXBuildFile; fileRef = E0C6067B128ECC110099367C /* larabie-16-hd.png */; };
+		E0C60682128ECC110099367C /* larabie-16.png in Resources */ = {isa = PBXBuildFile; fileRef = E0C6067C128ECC110099367C /* larabie-16.png */; };
+		E0D2D560128CB06A00F78C63 /* piece.png in Resources */ = {isa = PBXBuildFile; fileRef = E0D2D55F128CB06A00F78C63 /* piece.png */; };
+		E0D44F3A1291BFFB0094708A /* test_image_rgba4444.pvr.ccz in Resources */ = {isa = PBXBuildFile; fileRef = E0D44F381291BFFB0094708A /* test_image_rgba4444.pvr.ccz */; };
+		E0D44F3B1291BFFB0094708A /* test_image_rgba4444.pvr.gz in Resources */ = {isa = PBXBuildFile; fileRef = E0D44F391291BFFB0094708A /* test_image_rgba4444.pvr.gz */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -3025,6 +3038,13 @@
 			remoteGlobalIDString = E0B92F251226C0DD003FF67E;
 			remoteInfo = ActionEaseTest;
 		};
+		E0D44F531291C0790094708A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = E050531F122D5AE6005B74CB /* RenderTextureTest */;
+			remoteInfo = RenderTextureTest;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -3034,10 +3054,13 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		E01E663D121CA00A001A484F /* libcocos2d.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libcocos2d.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		E01E6A3D121EDCD3001A484F /* ApplicationServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ApplicationServices.framework; path = System/Library/Frameworks/ApplicationServices.framework; sourceTree = SDKROOT; };
+		E02BBC79126CD870006E46A2 /* CCAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAnimation.m; sourceTree = "<group>"; };
+		E02BBC7A126CD870006E46A2 /* CCAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAnimation.h; sourceTree = "<group>"; };
+		E02BBC7B126CD870006E46A2 /* CCAnimationCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCAnimationCache.m; sourceTree = "<group>"; };
+		E02BBC7C126CD870006E46A2 /* CCAnimationCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCAnimationCache.h; sourceTree = "<group>"; };
 		E036A79C121B5C720037C5C6 /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		E036A79E121B5C870037C5C6 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		E0505401122D5AE6005B74CB /* RenderTextureTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RenderTextureTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		E0505403122D5AE6005B74CB /* cocos2d_mac-Info copy.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "cocos2d_mac-Info copy.plist"; path = "Resources-Mac/cocos2d_mac-Info copy.plist"; sourceTree = "<group>"; };
 		E0505404122D5B58005B74CB /* RenderTextureTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RenderTextureTest.h; path = tests/RenderTextureTest.h; sourceTree = "<group>"; };
 		E0505405122D5B58005B74CB /* RenderTextureTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RenderTextureTest.m; path = tests/RenderTextureTest.m; sourceTree = "<group>"; };
 		E076E4471225C4BE00DE0DA2 /* MenuTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MenuTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3460,6 +3483,15 @@
 		E0B930071226C0DD003FF67E /* ActionEaseTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ActionEaseTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0B9300E1226C184003FF67E /* EaseActionsTest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EaseActionsTest.h; path = tests/EaseActionsTest.h; sourceTree = "<group>"; };
 		E0B9300F1226C184003FF67E /* EaseActionsTest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EaseActionsTest.m; path = tests/EaseActionsTest.m; sourceTree = "<group>"; };
+		E0C60677128ECC110099367C /* konqa32-hd.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = "konqa32-hd.fnt"; sourceTree = "<group>"; };
+		E0C60678128ECC110099367C /* konqa32-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "konqa32-hd.png"; sourceTree = "<group>"; };
+		E0C60679128ECC110099367C /* konqa32.fnt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = konqa32.fnt; sourceTree = "<group>"; };
+		E0C6067A128ECC110099367C /* konqa32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = konqa32.png; sourceTree = "<group>"; };
+		E0C6067B128ECC110099367C /* larabie-16-hd.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "larabie-16-hd.png"; sourceTree = "<group>"; };
+		E0C6067C128ECC110099367C /* larabie-16.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "larabie-16.png"; sourceTree = "<group>"; };
+		E0D2D55F128CB06A00F78C63 /* piece.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = piece.png; sourceTree = "<group>"; };
+		E0D44F381291BFFB0094708A /* test_image_rgba4444.pvr.ccz */ = {isa = PBXFileReference; lastKnownFileType = file; path = test_image_rgba4444.pvr.ccz; sourceTree = "<group>"; };
+		E0D44F391291BFFB0094708A /* test_image_rgba4444.pvr.gz */ = {isa = PBXFileReference; lastKnownFileType = archive.gzip; path = test_image_rgba4444.pvr.gz; sourceTree = "<group>"; };
 		E0F9256D1224207200EF2362 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -3719,7 +3751,6 @@
 				E076E78E1225EDD000DE0DA2 /* cocos2d-artwork */,
 				E076E7A11225EDD000DE0DA2 /* Fonts */,
 				E076E7B71225EDD000DE0DA2 /* Images */,
-				E0505403122D5AE6005B74CB /* cocos2d_mac-Info copy.plist */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -3926,6 +3957,10 @@
 		E076E7751225ECB100DE0DA2 /* Sprite Nodes */ = {
 			isa = PBXGroup;
 			children = (
+				E02BBC79126CD870006E46A2 /* CCAnimation.m */,
+				E02BBC7A126CD870006E46A2 /* CCAnimation.h */,
+				E02BBC7B126CD870006E46A2 /* CCAnimationCache.m */,
+				E02BBC7C126CD870006E46A2 /* CCAnimationCache.h */,
 				E076E67A1225EC7400DE0DA2 /* CCSprite.h */,
 				E076E67B1225EC7400DE0DA2 /* CCSprite.m */,
 				E076E67C1225EC7400DE0DA2 /* CCSpriteBatchNode.h */,
@@ -4054,6 +4089,12 @@
 		E076E7A11225EDD000DE0DA2 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				E0C60677128ECC110099367C /* konqa32-hd.fnt */,
+				E0C60678128ECC110099367C /* konqa32-hd.png */,
+				E0C60679128ECC110099367C /* konqa32.fnt */,
+				E0C6067A128ECC110099367C /* konqa32.png */,
+				E0C6067B128ECC110099367C /* larabie-16-hd.png */,
+				E0C6067C128ECC110099367C /* larabie-16.png */,
 				E076E7A21225EDD000DE0DA2 /* A Damn Mess.ttf */,
 				E076E7A31225EDD000DE0DA2 /* Abberancy.ttf */,
 				E076E7A41225EDD000DE0DA2 /* Abduction.ttf */,
@@ -4082,6 +4123,9 @@
 		E076E7B71225EDD000DE0DA2 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				E0D44F381291BFFB0094708A /* test_image_rgba4444.pvr.ccz */,
+				E0D44F391291BFFB0094708A /* test_image_rgba4444.pvr.gz */,
+				E0D2D55F128CB06A00F78C63 /* piece.png */,
 				E076E7B81225EDD000DE0DA2 /* atlastest.png */,
 				E076E7B91225EDD000DE0DA2 /* b1.png */,
 				E076E7BA1225EDD000DE0DA2 /* b2.png */,
@@ -4394,6 +4438,8 @@
 				E076E76D1225EC7400DE0DA2 /* uthash.h in Headers */,
 				E076E76E1225EC7400DE0DA2 /* utlist.h in Headers */,
 				E076E76F1225EC7400DE0DA2 /* ZipUtils.h in Headers */,
+				E02BBC7E126CD870006E46A2 /* CCAnimation.h in Headers */,
+				E02BBC80126CD870006E46A2 /* CCAnimationCache.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4629,6 +4675,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				E0D44F541291C0790094708A /* PBXTargetDependency */,
 				E0B92CE91226A0C9003FF67E /* PBXTargetDependency */,
 				E0B92CEB1226A0C9003FF67E /* PBXTargetDependency */,
 			);
@@ -4685,7 +4732,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C01FCF4E08A954540054247B /* Build configuration list for PBXProject "cocos2d-mac" */;
 			compatibilityVersion = "Xcode 3.1";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 29B97314FDCFA39411CA2CEA /* cocos2d-mac */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -4700,11 +4754,11 @@
 				E076E3771225C4BE00DE0DA2 /* MenuTest */,
 				E0AC084812280B7000EFA814 /* LabelTest */,
 				E0B92CE81226A0C9003FF67E /* ParallaxTest */,
+				E050531F122D5AE6005B74CB /* RenderTextureTest */,
 				E076F13512268A9800DE0DA2 /* SpriteTest */,
 				E076ECC91225FDE300DE0DA2 /* TextureTest */,
 				E076EB7E1225F82200DE0DA2 /* TiledMapTest */,
 				E076E4F01225E97900DE0DA2 /* TransitionTest */,
-				E050531F122D5AE6005B74CB /* RenderTextureTest */,
 			);
 		};
 /* End PBXProject section */
@@ -5787,6 +5841,8 @@
 				E076ED9B1225FDE300DE0DA2 /* TileMaps in Resources */,
 				E076ED9C1225FDE300DE0DA2 /* zwoptex in Resources */,
 				E076ED9D1225FDE300DE0DA2 /* MainMenu.xib in Resources */,
+				E0D44F3A1291BFFB0094708A /* test_image_rgba4444.pvr.ccz in Resources */,
+				E0D44F3B1291BFFB0094708A /* test_image_rgba4444.pvr.gz in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6003,6 +6059,7 @@
 				E076F20912268A9800DE0DA2 /* TileMaps in Resources */,
 				E076F20A12268A9800DE0DA2 /* zwoptex in Resources */,
 				E076F20B12268A9800DE0DA2 /* MainMenu.xib in Resources */,
+				E0D2D560128CB06A00F78C63 /* piece.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6651,6 +6708,12 @@
 				E0AC091A12280B7000EFA814 /* TileMaps in Resources */,
 				E0AC091B12280B7000EFA814 /* zwoptex in Resources */,
 				E0AC091C12280B7000EFA814 /* MainMenu.xib in Resources */,
+				E0C6067D128ECC110099367C /* konqa32-hd.fnt in Resources */,
+				E0C6067E128ECC110099367C /* konqa32-hd.png in Resources */,
+				E0C6067F128ECC110099367C /* konqa32.fnt in Resources */,
+				E0C60680128ECC110099367C /* konqa32.png in Resources */,
+				E0C60681128ECC110099367C /* larabie-16-hd.png in Resources */,
+				E0C60682128ECC110099367C /* larabie-16.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7375,6 +7438,8 @@
 				E076E76A1225EC7400DE0DA2 /* TGAlib.m in Sources */,
 				E076E76C1225EC7400DE0DA2 /* TransformUtils.m in Sources */,
 				E076E7701225EC7400DE0DA2 /* ZipUtils.m in Sources */,
+				E02BBC7D126CD870006E46A2 /* CCAnimation.m in Sources */,
+				E02BBC7F126CD870006E46A2 /* CCAnimationCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7669,6 +7734,11 @@
 			target = E0B92F251226C0DD003FF67E /* ActionEaseTest */;
 			targetProxy = E0B9300A1226C0F3003FF67E /* PBXContainerItemProxy */;
 		};
+		E0D44F541291C0790094708A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = E050531F122D5AE6005B74CB /* RenderTextureTest */;
+			targetProxy = E0D44F531291C0790094708A /* PBXContainerItemProxy */;
+		};
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
@@ -7694,10 +7764,11 @@
 					DEBUG,
 				);
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
@@ -7710,10 +7781,11 @@
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_TREAT_WARNINGS_AS_ERRORS = NO;
-				GCC_VERSION = com.apple.compilers.llvmgcc42;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = NO;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.5;
 				PREBINDING = NO;
 				SDKROOT = macosx10.6;
 			};

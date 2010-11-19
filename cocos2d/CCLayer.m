@@ -35,6 +35,7 @@
 
 #ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 #import "Platforms/iOS/CCTouchDispatcher.h"
+#import "Platforms/iOS/CCDirectorIOS.h"
 #elif defined(__MAC_OS_X_VERSION_MAX_ALLOWED)
 #import "Platforms/Mac/CCEventDispatcher.h"
 #endif
@@ -174,9 +175,6 @@
 	// since events are propagated in reverse order
 	if (isTouchEnabled_)
 		[self registerWithTouchDispatcher];
-	
-	if( isAccelerometerEnabled_ )
-		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
 
 #elif defined(__MAC_OS_X_VERSION_MAX_ALLOWED)
 	if( isMouseEnabled_ )
@@ -188,9 +186,20 @@
 	
 	// then iterate over all the children
 	[super onEnter];
-	
-	
 }
+
+// issue #624.
+// Can't register mouse, touches here because of #issue #1018, and #1021
+-(void) onEnterTransitionDidFinish
+{
+#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
+	if( isAccelerometerEnabled_ )
+		[[UIAccelerometer sharedAccelerometer] setDelegate:self];
+#endif
+	
+	[super onEnterTransitionDidFinish];
+}
+
 
 -(void) onExit
 {
@@ -261,7 +270,7 @@
 			squareVertices[i] = 0.0f;
 				
 		[self updateColor];
-		[self setContentSize:CGSizeMake(w,h)];
+		[self setContentSize:CGSizeMake(w, h) ];
 	}
 	return self;
 }
@@ -275,10 +284,10 @@
 // override contentSize
 -(void) setContentSize: (CGSize) size
 {
-	squareVertices[2] = size.width;
-	squareVertices[5] = size.height;
-	squareVertices[6] = size.width;
-	squareVertices[7] = size.height;
+	squareVertices[2] = size.width * CC_CONTENT_SCALE_FACTOR();
+	squareVertices[5] = size.height * CC_CONTENT_SCALE_FACTOR();
+	squareVertices[6] = size.width * CC_CONTENT_SCALE_FACTOR();
+	squareVertices[7] = size.height * CC_CONTENT_SCALE_FACTOR();
 	
 	[super setContentSize:size];
 }

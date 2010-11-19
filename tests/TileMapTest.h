@@ -133,3 +133,11 @@
 {}
 @end
 
+@interface TMXBug987 : TileDemo
+{}
+@end
+
+@interface TMXBug787 : TileDemo
+{}
+@end
+

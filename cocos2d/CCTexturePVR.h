@@ -50,22 +50,26 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 #import "Platforms/CCGL.h"
 #import "CCTextureCache.h"
 #import "CCTexture2D.h"
-
-#pragma mark -
-#pragma mark CCTextureCache PVR extension
-
-#pragma mark -
-#pragma mark CCTexture2D PVR extension
-
+#import "ccCArray.h"
 
 #pragma mark -
 #pragma mark CCTexturePVR
 
+struct CCPVRMipmap {
+	unsigned char *address;
+	unsigned int len;
+};
+
+enum {
+	CC_PVRMIPMAP_MAX = 16,
+};
+
 @interface CCTexturePVR : NSObject
 {
-	NSMutableArray *imageData_;
+	struct CCPVRMipmap	mipmaps_[CC_PVRMIPMAP_MAX];	// pointer to mipmap images
+	int		numberOfMipmaps_;					// number of mipmap used
 	
-	int		tableFormatIndex_;
+	unsigned int	tableFormatIndex_;
 	uint32_t width_, height_;
 	GLuint	name_;
 	BOOL hasAlpha_;

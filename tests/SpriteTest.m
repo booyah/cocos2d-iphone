@@ -12,45 +12,49 @@
 
 static int sceneIdx=-1;
 static NSString *transitions[] = {	
-			@"Sprite1",
-			@"SpriteBatchNode1",
-			@"SpriteFrameTest",
-			@"SpriteFrameAliasNameTest",
-			@"SpriteAnchorPoint",
-			@"SpriteBatchNodeAnchorPoint",
-			@"SpriteOffsetAnchorRotation",
-			@"SpriteBatchNodeOffsetAnchorRotation",
-			@"SpriteOffsetAnchorScale",
-			@"SpriteBatchNodeOffsetAnchorScale",
-			@"SpriteAnimationSplit",
-			@"SpriteColorOpacity",
-			@"SpriteBatchNodeColorOpacity",
-			@"SpriteZOrder",
-			@"SpriteBatchNodeZOrder",
-			@"SpriteBatchNodeReorder",
-			@"SpriteBatchNodeReorderIssue744",
-			@"SpriteBatchNodeReorderIssue767",
-			@"SpriteZVertex",
-			@"SpriteBatchNodeZVertex",
-			@"Sprite6",
-			@"SpriteFlip",
-			@"SpriteBatchNodeFlip",
-			@"SpriteAliased",
-			@"SpriteBatchNodeAliased",
-			@"SpriteNewTexture",
-			@"SpriteBatchNodeNewTexture",
-			@"SpriteHybrid",
-			@"SpriteBatchNodeChildren",
-			@"SpriteBatchNodeChildren2",
-			@"SpriteBatchNodeChildrenZ",
-			@"SpriteChildrenVisibility",
-			@"SpriteChildrenAnchorPoint",
-			@"SpriteBatchNodeChildrenAnchorPoint",
-			@"SpriteBatchNodeChildrenScale",
-			@"SpriteChildrenChildren",
-			@"SpriteBatchNodeChildrenChildren",
-			@"SpriteNilTexture",
-			@"SpriteSubclass",
+	
+	@"Sprite1",
+	@"SpriteBatchNode1",
+	@"SpriteFrameTest",
+	@"SpriteFrameAliasNameTest",
+	@"SpriteAnchorPoint",
+	@"SpriteBatchNodeAnchorPoint",
+	@"SpriteOffsetAnchorRotation",
+	@"SpriteBatchNodeOffsetAnchorRotation",
+	@"SpriteOffsetAnchorScale",
+	@"SpriteBatchNodeOffsetAnchorScale",
+	@"SpriteAnimationSplit",
+	@"SpriteColorOpacity",
+	@"SpriteBatchNodeColorOpacity",
+	@"SpriteZOrder",
+	@"SpriteBatchNodeZOrder",
+	@"SpriteBatchNodeReorder",
+	@"SpriteBatchNodeReorderIssue744",
+	@"SpriteBatchNodeReorderIssue766",
+	@"SpriteBatchNodeReorderIssue767",
+	@"SpriteZVertex",
+	@"SpriteBatchNodeZVertex",
+	@"Sprite6",
+	@"SpriteFlip",
+	@"SpriteBatchNodeFlip",
+	@"SpriteAliased",
+	@"SpriteBatchNodeAliased",
+	@"SpriteNewTexture",
+	@"SpriteBatchNodeNewTexture",
+	@"SpriteHybrid",
+	@"SpriteBatchNodeChildren",
+	@"SpriteBatchNodeChildren2",
+	@"SpriteBatchNodeChildrenZ",
+	@"SpriteChildrenVisibility",
+	@"SpriteChildrenVisibilityIssue665",
+	@"SpriteChildrenAnchorPoint",
+	@"SpriteBatchNodeChildrenAnchorPoint",
+	@"SpriteBatchNodeChildrenScale",
+	@"SpriteChildrenChildren",
+	@"SpriteBatchNodeChildrenChildren",
+	@"SpriteNilTexture",
+	@"SpriteSubclass",
+	@"AnimationCache",
 };
 
 enum {
@@ -123,7 +127,6 @@ Class restartAction()
 			[self addChild:l z:1];
 			[l setPosition:ccp(s.width/2, s.height-80)];
 		}
-		
 		
 		CCMenuItemImage *item1 = [CCMenuItemImage itemFromNormalImage:@"b1.png" selectedImage:@"b2.png" target:self selector:@selector(backCallback:)];
 		CCMenuItemImage *item2 = [CCMenuItemImage itemFromNormalImage:@"r1.png" selectedImage:@"r2.png" target:self selector:@selector(restartCallback:)];
@@ -731,6 +734,67 @@ Class restartAction()
 }
 @end
 
+@implementation SpriteBatchNodeReorderIssue766
+-(CCSprite *)makeSpriteZ:(int)aZ
+{
+	CCSprite *sprite = [CCSprite spriteWithBatchNode:batchNode rect:CGRectMake(128,0,64,64)];
+	[batchNode addChild:sprite z:aZ+1 tag:0];
+	
+	//children
+	CCSprite *spriteShadow = [CCSprite spriteWithBatchNode:batchNode rect:CGRectMake(0,0,64,64)];
+	spriteShadow.opacity = 128;
+	[sprite addChild:spriteShadow z:aZ tag:3];
+	
+	CCSprite *spriteTop = [CCSprite spriteWithBatchNode:batchNode rect:CGRectMake(64,0,64,64)];
+	[sprite addChild:spriteTop z:aZ+2 tag:3];
+	
+	return sprite;
+}
+
+- (void) reorderSprite:(ccTime)dt
+{
+	[self unschedule:_cmd];
+	
+	[batchNode reorderChild:sprite1 z:4];
+}
+
+// on "init" you need to initialize your instance
+-(id) init
+{
+	// always call "super" init
+	// Apple recommends to re-assign "self" with the "super" return value
+	if( (self=[super init] )) {
+		
+		batchNode = [CCSpriteBatchNode batchNodeWithFile:@"piece.png" capacity:15];
+		[self addChild:batchNode z:1 tag:0];
+		
+		sprite1 = [self makeSpriteZ:2];
+		sprite1.position = CGPointMake(200,160);
+		
+		sprite2= [self makeSpriteZ:3];
+		sprite2.position = CGPointMake(264,160);
+		
+		sprite3 = [self makeSpriteZ:4];
+		sprite3.position = CGPointMake(328,160);
+		
+		[self schedule:@selector(reorderSprite:) interval:2];
+	}
+	return self;
+}
+
+-(NSString *) title
+{
+	return @"SpriteBatchNode: reorder issue #766";
+}
+
+-(NSString *) subtitle
+{
+	return @"In 2 seconds 1 sprite will be reordered";
+}
+
+@end
+
+
 @implementation SpriteBatchNodeReorderIssue767
 
 -(id) init
@@ -1160,14 +1224,18 @@ Class restartAction()
 }
 -(void) flipSprites:(ccTime)dt
 {
-	id sprite1 = [self getChildByTag:kTagSprite1];
-	id sprite2 = [self getChildByTag:kTagSprite2];
+	CCSprite *sprite1 = (CCSprite*)[self getChildByTag:kTagSprite1];
+	CCSprite *sprite2 = (CCSprite*)[self getChildByTag:kTagSprite2];
 	
 	BOOL x = [sprite1 flipX];
 	BOOL y = [sprite2 flipY];
 	
+	// testing bug #970
+	NSLog(@"Pre: %f", sprite1.contentSize.height);
 	[sprite1 setFlipX: !x];
 	[sprite2 setFlipY: !y];
+	NSLog(@"Post: %f", sprite1.contentSize.height);
+
 }
 -(NSString*) title
 {
@@ -1200,14 +1268,19 @@ Class restartAction()
 -(void) flipSprites:(ccTime)dt
 {
 	id batch = [self getChildByTag:kTagSpriteBatchNode];
-	id sprite1 = [batch getChildByTag:kTagSprite1];
-	id sprite2 = [batch getChildByTag:kTagSprite2];
+	CCSprite *sprite1 = (CCSprite*)[batch getChildByTag:kTagSprite1];
+	CCSprite *sprite2 = (CCSprite*)[batch getChildByTag:kTagSprite2];
 	
 	BOOL x = [sprite1 flipX];
 	BOOL y = [sprite2 flipY];
 	
+
+	// testing bug #970
+	NSLog(@"Pre: %f", sprite1.contentSize.height);
 	[sprite1 setFlipX: !x];
-	[sprite2 setFlipY: !y];
+	[sprite2 setFlipY: !y];	
+	NSLog(@"Post: %f", sprite1.contentSize.height);
+	
 }
 -(NSString*) title
 {
@@ -1572,7 +1645,7 @@ Class restartAction()
 			[animFrames addObject:frame];
 		}
 
-		CCAnimation *animation = [CCAnimation animationWithName:@"dance" frames:animFrames];
+		CCAnimation *animation = [CCAnimation animationWithFrames:animFrames];
 		// 14 frames * 1sec = 14 seconds
 		[sprite1 runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:14.0f animation:animation restoreOriginalFrame:NO] ]];
 
@@ -1602,7 +1675,7 @@ Class restartAction()
 		
 		// append frames from another batch
 		[moreFrames addObjectsFromArray:animFrames];
-		CCAnimation *animMixed = [CCAnimation animationWithName:@"dance" frames:moreFrames];
+		CCAnimation *animMixed = [CCAnimation animationWithFrames:moreFrames];
 		
 		// 32 frames * 1 seconds = 32 seconds
 		[sprite2 runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:32.0f animation:animMixed restoreOriginalFrame:NO]]];
@@ -1724,7 +1797,7 @@ Class restartAction()
 			[animFrames addObject:frame];
 		}
 		
-		CCAnimation *animation = [CCAnimation animationWithName:@"dance" frames:animFrames];
+		CCAnimation *animation = [CCAnimation animationWithFrames:animFrames];
 		// 14 frames * 1sec = 14 seconds
 		[sprite runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:14.0f animation:animation restoreOriginalFrame:NO] ]];
 		
@@ -1796,7 +1869,7 @@ Class restartAction()
 				CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_dance_%02d.png",(i+1)]];
 				[animFrames addObject:frame];
 			}
-			CCAnimation *animation = [CCAnimation animationWithName:@"dance" frames:animFrames];
+			CCAnimation *animation = [CCAnimation animationWithFrames:animFrames];
 			[sprite runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:2.8f animation:animation restoreOriginalFrame:NO] ]];			
 			[sprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:10 angle:360]]];
 
@@ -1869,7 +1942,7 @@ Class restartAction()
 				CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_dance_%02d.png",(i+1)]];
 				[animFrames addObject:frame];
 			}
-			CCAnimation *animation = [CCAnimation animationWithName:@"dance" frames:animFrames];
+			CCAnimation *animation = [CCAnimation animationWithFrames:animFrames];
 			[sprite runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:2.8f animation:animation restoreOriginalFrame:NO] ]];
 			[sprite runAction:[CCRepeatForever actionWithAction:[CCRotateBy actionWithDuration:10 angle:360]]];
 			
@@ -1938,7 +2011,7 @@ Class restartAction()
 				CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_dance_%02d.png",(i+1)]];
 				[animFrames addObject:frame];
 			}
-			CCAnimation *animation = [CCAnimation animationWithName:@"dance" frames:animFrames];
+			CCAnimation *animation = [CCAnimation animationWithFrames:animFrames];
 			[sprite runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:2.8f animation:animation restoreOriginalFrame:NO] ]];			
 			
 			id scale = [CCScaleBy actionWithDuration:2 scale:2];
@@ -2014,7 +2087,7 @@ Class restartAction()
 				CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_dance_%02d.png",(i+1)]];
 				[animFrames addObject:frame];
 			}
-			CCAnimation *animation = [CCAnimation animationWithName:@"dance" frames:animFrames];
+			CCAnimation *animation = [CCAnimation animationWithFrames:animFrames];
 			[sprite runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithDuration:2.8f animation:animation restoreOriginalFrame:NO] ]];
 
 			id scale = [CCScaleBy actionWithDuration:2 scale:2];
@@ -2056,12 +2129,12 @@ Class restartAction()
 		CCTexture2D *texture = [[CCTextureCache sharedTextureCache] addImage:@"animations/dragon_animation.png"];
 		
 		// manually add frames to the frame cache
-		CCSpriteFrame *frame0 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*0, 132*0, 132, 132) offset:CGPointZero];
-		CCSpriteFrame *frame1 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*1, 132*0, 132, 132) offset:CGPointZero];
-		CCSpriteFrame *frame2 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*2, 132*0, 132, 132) offset:CGPointZero];
-		CCSpriteFrame *frame3 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*3, 132*0, 132, 132) offset:CGPointZero];
-		CCSpriteFrame *frame4 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*0, 132*1, 132, 132) offset:CGPointZero];
-		CCSpriteFrame *frame5 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*1, 132*1, 132, 132) offset:CGPointZero];
+		CCSpriteFrame *frame0 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*0, 132*0, 132, 132)];
+		CCSpriteFrame *frame1 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*1, 132*0, 132, 132)];
+		CCSpriteFrame *frame2 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*2, 132*0, 132, 132)];
+		CCSpriteFrame *frame3 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*3, 132*0, 132, 132)];
+		CCSpriteFrame *frame4 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*0, 132*1, 132, 132)];
+		CCSpriteFrame *frame5 = [CCSpriteFrame frameWithTexture:texture rect:CGRectMake(132*1, 132*1, 132, 132)];
 		
 		
 		//
@@ -2079,7 +2152,7 @@ Class restartAction()
 		[animFrames addObject:frame4];
 		[animFrames addObject:frame5];
 				
-		CCAnimation *animation = [CCAnimation animationWithName:@"fly" delay:0.2f frames:animFrames];
+		CCAnimation *animation = [CCAnimation animationWithFrames:animFrames delay:0.2f];
 		CCAnimate *animate = [CCAnimate actionWithAnimation:animation restoreOriginalFrame:NO];
 		CCSequence *seq = [CCSequence actions: animate,
 						   [CCFlipX actionWithFlipX:YES],
@@ -2239,7 +2312,7 @@ Class restartAction()
 			[animFrames addObject:frame];
 		}
 		
-		CCAnimation *animation = [CCAnimation animationWithName:@"dance" delay:0.2f frames:animFrames];
+		CCAnimation *animation = [CCAnimation animationWithFrames:animFrames delay:0.2f];
 		[sprite1 runAction:[CCRepeatForever actionWithAction: [CCAnimate actionWithAnimation:animation restoreOriginalFrame:NO] ]];
 		// END NEW CODE
 		
@@ -2505,7 +2578,10 @@ Class restartAction()
 		
 		sprite3 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_03.png"];
 		[sprite3 setPosition:ccp(-20,30)];
-		
+
+		// test issue #665
+//		sprite1.visible = NO;
+
 		[aParent addChild:sprite1];
 		[sprite1 addChild:sprite2 z:-2];
 		[sprite1 addChild:sprite3 z:2];
@@ -2528,6 +2604,9 @@ Class restartAction()
 		sprite3 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_03.png"];
 		[sprite3 setPosition:ccp(-20,30)];
 		
+		// test issue #665
+//		sprite1.visible = NO;
+
 		[aParent addChild:sprite1];
 		[sprite1 addChild:sprite2 z:-2];
 		[sprite1 addChild:sprite3 z:2];
@@ -2548,6 +2627,92 @@ Class restartAction()
 {
 	return @"Sprite & SpriteBatchNode Visibility";
 }
+@end
+
+#pragma mark -
+#pragma mark SpriteChildrenVisibilityIssue665
+
+@implementation SpriteChildrenVisibilityIssue665
+
+-(id) init
+{
+	if( (self=[super init]) ) {
+		
+		CGSize s = [[CCDirector sharedDirector] winSize];
+		
+		[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"animations/grossini.plist"];
+		
+		CCNode *aParent;
+		CCSprite *sprite1, *sprite2, *sprite3;
+		//
+		// SpriteBatchNode
+		//
+		// parents
+		aParent = [CCSpriteBatchNode batchNodeWithFile:@"animations/grossini.png" capacity:50];
+		aParent.position = ccp(s.width/3, s.height/2);
+		[self addChild:aParent z:0];
+		
+		
+		
+		sprite1 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_01.png"];
+		[sprite1 setPosition:ccp(0,0)];
+		
+		sprite2 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_02.png"];
+		[sprite2 setPosition:ccp(20,30)];
+		
+		sprite3 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_03.png"];
+		[sprite3 setPosition:ccp(-20,30)];
+		
+		// test issue #665
+		sprite1.visible = NO;
+		
+		[aParent addChild:sprite1];
+		[sprite1 addChild:sprite2 z:-2];
+		[sprite1 addChild:sprite3 z:2];
+				
+		//
+		// Sprite
+		//
+		aParent = [CCNode node];
+		aParent.position = ccp(2*s.width/3, s.height/2);
+		[self addChild:aParent z:0];
+		
+		sprite1 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_01.png"];
+		[sprite1 setPosition:ccp(0,0)];
+		
+		sprite2 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_02.png"];
+		[sprite2 setPosition:ccp(20,30)];
+		
+		sprite3 = [CCSprite spriteWithSpriteFrameName:@"grossini_dance_03.png"];
+		[sprite3 setPosition:ccp(-20,30)];
+		
+		// test issue #665
+		sprite1.visible = NO;
+		
+		[aParent addChild:sprite1];
+		[sprite1 addChild:sprite2 z:-2];
+		[sprite1 addChild:sprite3 z:2];
+		
+	}	
+	return self;
+}
+
+- (void) dealloc
+{
+	[[CCSpriteFrameCache sharedSpriteFrameCache] removeUnusedSpriteFrames];
+	[super dealloc];
+}
+
+-(NSString *) title
+{
+	return @"Sprite & SpriteBatchNode Visibility";
+}
+
+-(NSString *) subtitle
+{
+	return @"No sprites should be visible";
+}
+
 @end
 
 #pragma mark -
@@ -3189,6 +3354,113 @@ Class restartAction()
 @end
 
 #pragma mark -
+#pragma mark AnimationCache
+
+@implementation AnimationCache
+
+
+-(id) init
+{
+	if( (self=[super init]) ) {
+				
+		[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"animations/grossini.plist"];
+		[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"animations/grossini_gray.plist"];
+		[[CCSpriteFrameCache sharedSpriteFrameCache] addSpriteFramesWithFile:@"animations/grossini_blue.plist"];		
+
+		//
+		// create animation "dance"
+		//
+		NSMutableArray *animFrames = [NSMutableArray array];
+		for(int i = 1; i < 15; i++) {
+			
+			CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_dance_%02d.png",i]];
+			[animFrames addObject:frame];
+		}
+		
+		CCAnimation *animation = [CCAnimation animationWithFrames:animFrames delay:0.2f];
+		
+		// Add an animation to the Cache
+		[[CCAnimationCache sharedAnimationCache] addAnimation:animation name:@"dance"];
+		
+		
+		//
+		// create animation "dance gray"
+		//
+		[animFrames removeAllObjects];
+		
+		for(int i = 1; i < 15; i++) {
+			
+			CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_dance_gray_%02d.png",i]];
+			[animFrames addObject:frame];
+		}
+		
+		animation = [CCAnimation animationWithFrames:animFrames delay:0.2f];
+		
+		// Add an animation to the Cache
+		[[CCAnimationCache sharedAnimationCache] addAnimation:animation name:@"dance_gray"];
+
+		//
+		// create animation "dance blue"
+		//
+		[animFrames removeAllObjects];
+		
+		for(int i = 1; i < 4; i++) {
+			
+			CCSpriteFrame *frame = [[CCSpriteFrameCache sharedSpriteFrameCache] spriteFrameByName:[NSString stringWithFormat:@"grossini_blue_%02d.png",i]];
+			[animFrames addObject:frame];
+		}
+		
+		animation = [CCAnimation animationWithFrames:animFrames delay:0.2f];
+		
+		// Add an animation to the Cache
+		[[CCAnimationCache sharedAnimationCache] addAnimation:animation name:@"dance_blue"];
+		
+	
+		CCAnimationCache *animCache = [CCAnimationCache sharedAnimationCache];
+		
+		CCAnimation *normal = [animCache animationByName:@"dance"];
+		CCAnimation *dance_grey = [animCache animationByName:@"dance_gray"];
+		CCAnimation *dance_blue = [animCache animationByName:@"dance_blue"];
+		
+		CCAnimate *animN = [CCAnimate actionWithAnimation:normal];
+		CCAnimate *animG = [CCAnimate actionWithAnimation:dance_grey];
+		CCAnimate *animB = [CCAnimate actionWithAnimation:dance_blue];
+		
+		CCSequence *seq = [CCSequence actions:animN, animG, animB, nil];
+		
+		// create an sprite without texture
+		CCSprite *grossini = [CCSprite node];
+		
+		CGSize winSize = [[CCDirector sharedDirector] winSize];
+		
+		grossini.position = ccp(winSize.width/2, winSize.height/2);
+		
+		[self addChild:grossini];
+		
+		
+		// run the animation
+		[grossini runAction:seq];
+		
+	}
+		 
+	return self;
+	
+}
+
+-(NSString *) title
+{
+	return @"AnimationCache";
+}
+
+-(NSString*) subtitle
+{
+	return @"Sprite should be animated";
+}
+
+@end
+
+
+#pragma mark -
 #pragma mark AppDelegate
 
 // CLASS IMPLEMENTATIONS
@@ -3221,16 +3493,20 @@ Class restartAction()
 	EAGLView *glView = [EAGLView viewWithFrame:[window bounds]
 								   pixelFormat:kEAGLColorFormatRGBA8
 								   depthFormat:GL_DEPTH_COMPONENT24_OES
-							preserveBackbuffer:NO];
-	
+							preserveBackbuffer:NO
+									sharegroup:nil
+								 multiSampling:NO
+							   numberOfSamples:0];
+
 	// attach the openglView to the director
 	[director setOpenGLView:glView];
 
 	// 2D projection
 //	[director setProjection:kCCDirectorProjection2D];
 
-	// To use High-Res un comment the following line
-//	[director setContentScaleFactor:2];	
+	// Enables High Res mode (Retina Display) on iPhone 4 and maintains low res on all other devices
+	if( ! [director enableRetinaDisplay:YES] )
+		CCLOG(@"Retina Display Not supported");
 	
 	// make the OpenGLView a child of the main window
 	[window addSubview:glView];

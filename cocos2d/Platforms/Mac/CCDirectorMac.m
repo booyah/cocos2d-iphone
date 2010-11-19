@@ -80,7 +80,9 @@
 	
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	[self drawScene];	
+	[self drawScene];
+	[[CCEventDispatcher sharedDispatcher] dispatchQueuedEvents];
+	
 	[[NSRunLoop currentRunLoop] run];
 	
 	[pool release];
@@ -197,6 +199,10 @@ static CVReturn MyDisplayLinkCallback(CVDisplayLinkRef displayLink, const CVTime
 	
 	/* draw the scene */
 	[runningScene_ visit];
+	
+	/* draw the notification node */
+	[notificationNode_ visit];
+
 	if( displayFPS_ )
 		[self showFPS];
 	

@@ -53,18 +53,16 @@
 #define CC_FIX_ARTIFACTS_BY_STRECHING_TEXEL 0
  
 
-#ifdef __IPHONE_OS_VERSION_MAX_ALLOWED
 /** @def CC_FONT_LABEL_SUPPORT
  If enabled, FontLabel will be used to render .ttf files.
- If the .ttf file is not found, then it will use the standard CCFont class
- If disabled, the standard CCFont class will be used.
+ If the .ttf file is not found, then it will use the standard UIFont class
+ If disabled, the standard UIFont class will be used.
  
- To enable set it to a value different than 0. Enabled by default.
+ To disable set it to 0. Enabled by default.
+
+ Only valid for cocos2d-ios. Not supported on cocos2d-mac
  */
 #define CC_FONT_LABEL_SUPPORT	1
-#elif defined(__MAC_OS_X_VERSION_MAX_ALLOWED)
-#define CC_FONT_LABEL_SUPPORT	0
-#endif
 
 /** @def CC_DIRECTOR_FAST_FPS
  If enabled, then the FPS will be drawn using CCLabelAtlas (fast rendering).
@@ -90,7 +88,7 @@
  If your game uses lot's of events (eg: touches) it might be a good idea to enable this feature.
  Otherwise, it is safe to leave it disabled.
  
- To enable set it to a value different than 0. Disabled by default.
+ To enable set it to 1. Disabled by default.
  
  @warning This feature is experimental
  */
@@ -101,7 +99,9 @@
  
  By default cocos2d-mac will run in its own thread. Enable it if your game is skipping some frames.
  
- To enable set it to a value different than 0. Disabled by default.
+ To enable set it to a 1. Disabled by default.
+
+ This is an experimental feature. Not all the features are supported.
 
  Only valid for cocos2d-mac. Not supported on cocos2d-ios.
 
@@ -112,7 +112,7 @@
  If enabled, the CCNode objects (CCSprite, CCLabel,etc) will be able to render in subpixels.
  If disabled, integer pixels will be used.
  
- To enable set it to a value different than 0. Enabled by default.
+ To enable set it to 1. Enabled by default.
  */
 #define CC_COCOSNODE_RENDER_SUBPIXEL 1
 
@@ -120,16 +120,16 @@
  If enabled, the CCSprite objects rendered with CCSpriteBatchNode will be able to render in subpixels.
  If disabled, integer pixels will be used.
  
- To enable set it to a value different than 0. Enabled by default.
+ To enable set it to 1. Enabled by default.
  */
 #define CC_SPRITEBATCHNODE_RENDER_SUBPIXEL	1
 
 
-#if defined(__ARM_NEON__) || defined(TARGET_IPHONE_SIMULATOR) || defined(__MAC_OS_X_VERSION_MAX_ALLOWED)
+#if defined(__ARM_NEON__) || TARGET_IPHONE_SIMULATOR || defined(__MAC_OS_X_VERSION_MAX_ALLOWED)
 /** @def CC_USES_VBO
  If enabled, batch nodes (texture atlas and particle system) will use VBO instead of vertex list (VBO is recommended by Apple)
  
- To enable set it to a value different than 0.
+ To enable set it to 1.
  Enabled by default on iPhone with ARMv7 processors, iPhone Simulator and Mac
  Disabled by default on iPhone with ARMv6 processors.
  
@@ -185,6 +185,31 @@
  @since v0.99.2
  */
 #define CC_TEXTURE_NPOT_SUPPORT 1
+
+/** @def CC_RETINA_DISPLAY_FILENAME_SUFFIX
+ It's the suffix that will be appended to the files in order to load "retina display" images.
+
+ On an iPhone4 with Retina Display support enabled, the file @"sprite-hd.png" will be loaded instead of @"sprite.png".
+ If the file doesn't exist it will use the non-retina display image.
+ 
+ Platforms: Only used on Retina Display devices like iPhone 4.
+ 
+ @since v0.99.5
+ */ 
+#define CC_RETINA_DISPLAY_FILENAME_SUFFIX @"-hd"
+
+/** @def CC_USE_RGBA32_LABELS_ON_NEON_ARCH
+ If enabled, it will use RGBA8888 (32-bit textures) on Neon devices for CCLabelTTF objects.
+ If it is disabled, or if it is used on another architecture it will use A8 (8-bit textures).
+ On Neon devices, RGBA8888 textures are 6% faster than A8 textures, but then will consule 4x memory.
+ 
+ This feature is disabled by default.
+ 
+ Platforms: Only used on ARM Neon architectures like iPhone 3GS or newer and iPad.
+ 
+ @since v0.99.5
+ */
+#define CC_USE_RGBA32_LABELS_ON_NEON_ARCH 0
 
 /** @def CC_SPRITE_DEBUG_DRAW
  If enabled, all subclasses of CCSprite will draw a bounding box
