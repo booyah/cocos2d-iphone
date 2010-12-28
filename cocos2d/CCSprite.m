@@ -51,6 +51,7 @@ struct transformValues_ {
 	CGPoint pos;		// position x and y
 	CGPoint	scale;		// scale x and y
 	float	rotation;
+	CGPoint skew;		// skew x and y
 	CGPoint ap;			// anchor point in pixels
 	BOOL	visible;
 };
@@ -493,8 +494,11 @@ struct transformValues_ {
 		float c = cosf(radians);
 		float s = sinf(radians);
 		
-		matrix = CGAffineTransformMake( c * scaleX_,  s * scaleX_,
-									   -s * scaleY_, c * scaleY_,
+		float skewX = tanf(CC_DEGREES_TO_RADIANS(skewX_));
+		float skewY = tanf(CC_DEGREES_TO_RADIANS(skewY_));				   
+		
+		matrix = CGAffineTransformMake( c * scaleX_,  s * scaleX_ * skewY,
+									   -s * scaleY_ * skewX, c * scaleY_,
 									   positionInPixels_.x, positionInPixels_.y);
 		matrix = CGAffineTransformTranslate(matrix, -anchorPointInPixels_.x, -anchorPointInPixels_.y);		
 
@@ -523,9 +527,14 @@ struct transformValues_ {
 			}
 			CGAffineTransform newMatrix = CGAffineTransformIdentity;
 			
-			// 2nd: Translate, Rotate, Scale
+			// 2nd: Translate, Skew, Rotate, Scale
 			if( prevHonor & CC_HONOR_PARENT_TRANSFORM_TRANSLATE )
 				newMatrix = CGAffineTransformTranslate(newMatrix, tv.pos.x, tv.pos.y);
+			if ( prevHonor & CC_HONOR_PARENT_TRANSFORM_SKEW ) {
+				CGAffineTransform skew = CGAffineTransformMake(1.0f, tanf(CC_DEGREES_TO_RADIANS(tv.skew.y)), tanf(CC_DEGREES_TO_RADIANS(tv.skew.x)), 1.0f, 0.0f, 0.0f);
+				// apply the skew to the transform
+				newMatrix = CGAffineTransformConcat(skew, newMatrix);
+			}
 			if( prevHonor & CC_HONOR_PARENT_TRANSFORM_ROTATE )
 				newMatrix = CGAffineTransformRotate(newMatrix, -CC_DEGREES_TO_RADIANS(tv.rotation));
 			if( prevHonor & CC_HONOR_PARENT_TRANSFORM_SCALE ) {
@@ -590,6 +599,8 @@ struct transformValues_ {
 	tv->scale.x		= scaleX_;
 	tv->scale.y		= scaleY_;
 	tv->rotation	= rotation_;
+	tv->skew.x		= skewX_;
+	tv->skew.y		= skewY_;
 	tv->ap			= anchorPointInPixels_;
 	tv->visible		= visible_;
 }
@@ -745,6 +756,18 @@ struct transformValues_ {
 -(void)setRotation:(float)rot
 {
 	[super setRotation:rot];
+	SET_DIRTY_RECURSIVELY();
+}
+
+-(void)setSkewX:(float)sx
+{
+	[super setSkewX:sx];
+	SET_DIRTY_RECURSIVELY();
+}
+
+-(void)setSkewY:(float)sy
+{
+	[super setSkewY:sy];
 	SET_DIRTY_RECURSIVELY();
 }
 
