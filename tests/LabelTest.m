@@ -23,6 +23,7 @@ static NSString *transitions[] = {
 	@"LabelsEmpty",
 	@"LabelBMFontHD",
 	@"LabelAtlasHD",
+	@"LabelGlyphDesigner",
 	
 	// Not a label test. Should be moved to Atlas test
 	@"Atlas1",
@@ -350,7 +351,7 @@ Class restartAction()
 {
 	if( (self=[super init]) ) {
 		
-		CCColorLayer *col = [CCColorLayer layerWithColor:ccc4(128,128,128,255)];
+		CCLayerColor *col = [CCLayerColor layerWithColor:ccc4(128,128,128,255)];
 		[self addChild:col z:-10];
 		
 		CCLabelBMFont *label1 = [CCLabelBMFont labelWithString:@"Test" fntFile:@"bitmapFontTest2.fnt"];
@@ -903,6 +904,40 @@ Class restartAction()
 
 @end
 
+#pragma mark -
+#pragma mark LabelGlyphDesigner
+
+@implementation LabelGlyphDesigner
+-(id) init
+{
+	if( (self=[super init]) ) {
+		
+		CGSize s = [[CCDirector sharedDirector] winSize];
+		
+		CCLayerColor *layer = [CCLayerColor layerWithColor:ccc4(128,128,128,255)];
+		[self addChild:layer z:-10];
+		
+		// CCLabelBMFont
+		CCLabelBMFont *label1 = [CCLabelBMFont labelWithString:@"Testing Glyph Designer" fntFile:@"futura-48.fnt"];
+		[self addChild:label1];
+		[label1 setPosition: ccp(s.width/2, s.height/2)];
+		
+	}
+	
+	return self;
+}
+
+-(NSString*) title
+{
+	return @"Testing Glyph Designer";
+}
+
+-(NSString *) subtitle
+{
+	return @"You should see a font with shawdows and outline";
+}
+
+@end
 
 
 #pragma mark -
@@ -1007,10 +1042,9 @@ Class restartAction()
 
 @synthesize window=window_, glView=glView_;
 
-- (void)applicationDidFinishLaunching:(NSNotification *)aNotification {
-	
-	
-	CCDirector *director = [CCDirector sharedDirector];
+- (void)applicationDidFinishLaunching:(NSNotification *)aNotification
+{
+	CCDirectorMac *director = (CCDirectorMac*) [CCDirector sharedDirector];
 	
 	[director setDisplayFPS:YES];
 	
@@ -1021,11 +1055,25 @@ Class restartAction()
 	// Enable "moving" mouse event. Default no.
 	[window_ setAcceptsMouseMovedEvents:NO];
 	
+	// EXPERIMENTAL stuff.
+	// 'Effects' don't work correctly when autoscale is turned on.
+	[director setResizeMode:kCCDirectorResize_AutoScale];	
 	
 	CCScene *scene = [CCScene node];
 	[scene addChild: [nextAction() node]];
 	
 	[director runWithScene:scene];
+}
+
+- (BOOL) applicationShouldTerminateAfterLastWindowClosed: (NSApplication *) theApplication
+{
+	return YES;
+}
+
+- (IBAction)toggleFullScreen: (id)sender
+{
+	CCDirectorMac *director = (CCDirectorMac*) [CCDirector sharedDirector];
+	[director setFullScreen: ! [director isFullScreen] ];
 }
 
 @end
